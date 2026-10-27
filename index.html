@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>HTML & VS Code Mastery · Informatika SMA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & VARIABEL ========== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg-deep:#0b0e14;
+  --bg-surface:#11161f;
+  --bg-card:#181f2a;
+  --bg-code:#1a2332;
+  --bg-elev:#212b3a;
+  --border:#2a3442;
+  --border-light:#354154;
+  --text:#e6edf3;
+  --text-2:#9aa7b8;
+  --text-3:#5e6b7e;
+  --cyan:#00e5ff;
+  --green:#39ff14;
+  --magenta:#ff00ff;
+  --blue:#4d9eff;
+  --red:#ff5555;
+  --yellow:#ffcb6b;
+  --glow:0 0 14px rgba(0,229,255,.5),0 0 30px rgba(0,229,255,.18);
+  --radius:14px;
+  --radius-lg:20px;
+  --pill:999px;
+  --f-ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --f-code:'Fira Code','Courier New',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  background:var(--bg-deep);color:var(--text);font-family:var(--f-ui);line-height:1.6;
+  min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(circle at 15% 8%,rgba(0,229,255,.05) 0,transparent 38%),
+                   radial-gradient(circle at 85% 92%,rgba(57,255,20,.035) 0,transparent 42%);
+}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--cyan)}
+code,.code{font-family:var(--f-code);font-size:.85rem;background:var(--bg-code);padding:1px 7px;border-radius:6px;color:var(--cyan);border:1px solid var(--border)}
+h1,h2,h3,h4{font-weight:700;line-height:1.25;letter-spacing:-.02em}
+h1{font-size:1.9rem}h2{font-size:1.35rem}h3{font-size:1.1rem}
+
+/* ========== UTIL ========== */
+.hidden{display:none!important}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 24px;border-radius:var(--pill);font-family:var(--f-ui);
+  font-weight:600;font-size:.92rem;border:none;cursor:pointer;
+  transition:all .22s cubic-bezier(.22,1,.36,1);text-decoration:none;line-height:1.3;
+  user-select:none;
+}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),#0090cc);color:#0b0e14;box-shadow:0 4px 20px rgba(0,229,255,.35)}
+.btn-primary:hover{box-shadow:0 6px 30px rgba(0,229,255,.6);transform:translateY(-1px)}
+.btn-primary:active{transform:scale(.97)}
+.btn-green{background:linear-gradient(135deg,var(--green),#1fb800);color:#0b0e14;box-shadow:0 4px 20px rgba(57,255,20,.3)}
+.btn-green:hover{box-shadow:0 6px 30px rgba(57,255,20,.5);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--cyan);border:1.5px solid var(--cyan)}
+.btn-outline:hover{background:rgba(0,229,255,.1);box-shadow:var(--glow)}
+.btn-ghost{background:var(--bg-elev);color:var(--text-2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn:disabled{opacity:.45;pointer-events:none;filter:grayscale(.4)}
+.btn-block{width:100%}
+.btn-sm{padding:9px 16px;font-size:.82rem}
+
+/* ========== LAYAR (SCREEN SYSTEM) ========== */
+.screen{display:none;animation:fadeIn .45s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ========== COVER ========== */
+.cover{
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:32px 20px;position:relative;
+}
+.cover-badge{
+  font-family:var(--f-code);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--cyan);border:1px solid rgba(0,229,255,.4);padding:6px 16px;border-radius:var(--pill);
+  margin-bottom:22px;background:rgba(0,229,255,.06);
+}
+.cover h1{
+  font-size:clamp(2rem,9vw,3.4rem);font-weight:800;letter-spacing:-.03em;
+  margin-bottom:14px;line-height:1.1;
+}
+.cover h1 .grad{
+  background:linear-gradient(135deg,var(--cyan) 0%,var(--green) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.cover-sub{color:var(--text-2);font-size:.98rem;max-width:420px;margin:0 auto 30px}
+.cover-sub .hl{color:var(--green);font-weight:600}
+.cover-code{
+  font-family:var(--f-code);font-size:.72rem;color:var(--text-3);
+  margin-bottom:34px;padding:10px 18px;border:1px dashed var(--border);border-radius:10px;
+}
+.cover-code .k{color:var(--magenta)}
+.cover-code .s{color:var(--green)}
+.cover .btn-primary{padding:16px 40px;font-size:1rem;letter-spacing:.5px}
+.cover-orb{
+  position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,229,255,.12),transparent 70%);
+  filter:blur(30px);top:8%;left:50%;transform:translateX(-50%);pointer-events:none;
+}
+
+/* ========== TOP BAR ========== */
+.topbar{
+  position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:rgba(11,14,20,.94);backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);
+}
+.topbar .back-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:var(--bg-elev);border:1px solid var(--border);color:var(--cyan);
+  padding:8px 14px;border-radius:var(--pill);font-family:var(--f-ui);font-weight:600;
+  font-size:.78rem;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.topbar .back-btn:hover{border-color:var(--cyan);box-shadow:0 0 12px rgba(0,229,255,.25)}
+.topbar .tb-title{font-family:var(--f-code);font-size:.78rem;color:var(--text-2);flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ========== WRAP ========== */
+.wrap{max-width:860px;margin:0 auto;padding:22px 16px 50px;width:100%}
+.module-head{margin-bottom:22px}
+.module-head .tag{font-family:var(--f-code);font-size:.7rem;color:var(--green);letter-spacing:1px;text-transform:uppercase}
+.module-head h2{margin-top:4px;font-size:1.5rem}
+.module-head p{color:var(--text-2);font-size:.9rem;margin-top:6px}
+
+/* ========== ROADMAP ========== */
+.roadmap-wrap{max-width:560px;margin:0 auto;padding:24px 16px 60px;width:100%}
+.roadmap-title{text-align:center;margin-bottom:8px;font-size:1.5rem}
+.roadmap-sub{text-align:center;color:var(--text-2);font-size:.88rem;margin-bottom:30px}
+.roadmap{position:relative;display:flex;flex-direction:column;gap:26px}
+.roadmap::before{
+  content:'';position:absolute;left:50%;top:20px;bottom:20px;width:3px;
+  background:linear-gradient(180deg,var(--cyan),var(--green),var(--blue),var(--magenta),var(--yellow));
+  transform:translateX(-50%);border-radius:3px;opacity:.35;
+}
+.node{position:relative;display:flex;align-items:center;width:100%;cursor:pointer;transition:transform .25s ease}
+.node:nth-child(odd){justify-content:flex-start;padding-right:50%}
+.node:nth-child(even){justify-content:flex-end;padding-left:50%}
+.node-card{
+  background:var(--bg-card);border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:14px 16px;width:100%;max-width:250px;transition:all .25s ease;position:relative;
+}
+.node:hover .node-card,.node:focus-visible .node-card{
+  border-color:var(--cyan);box-shadow:0 0 0 1px rgba(0,229,255,.2),var(--glow);transform:scale(1.02);
+}
+.node:nth-child(odd) .node-card{text-align:right;margin-right:6px}
+.node:nth-child(even) .node-card{text-align:left;margin-left:6px}
+.node-num{
+  position:absolute;top:50%;width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-family:var(--f-code);
+  font-weight:700;font-size:1rem;color:#0b0e14;transform:translateY(-50%);
+  box-shadow:0 0 0 4px var(--bg-deep),0 0 18px rgba(0,229,255,.5);z-index:2;
+}
+.node:nth-child(odd) .node-num{right:-50%;transform:translate(50%,-50%)}
+.node:nth-child(even) .node-num{left:-50%;transform:translate(-50%,-50%)}
+.node:nth-child(1) .node-num{background:linear-gradient(135deg,var(--cyan),#0090cc)}
+.node:nth-child(2) .node-num{background:linear-gradient(135deg,#4d9eff,#2060cc)}
+.node:nth-child(3) .node-num{background:linear-gradient(135deg,var(--green),#1fb800)}
+.node:nth-child(4) .node-num{background:linear-gradient(135deg,#ffcb6b,#cc9900)}
+.node:nth-child(5) .node-num{background:linear-gradient(135deg,var(--magenta),#aa00aa)}
+.node-title{font-weight:700;font-size:.92rem;color:var(--text);display:block;margin-bottom:2px}
+.node-desc{font-size:.74rem;color:var(--text-3);font-family:var(--f-code);display:block}
+.node-status{
+  position:absolute;top:10px;right:12px;font-size:.65rem;font-family:var(--f-code);
+  padding:2px 8px;border-radius:var(--pill);background:var(--bg-elev);color:var(--text-3);
+}
+.node:nth-child(odd) .node-status{right:12px}
+
+/* ========== CARD ========== */
+.card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:20px 18px;margin-bottom:18px;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;width:100%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.5;
+}
+.card h3{margin-bottom:10px;color:var(--text)}
+.card p{color:var(--text-2);font-size:.9rem;margin-bottom:10px}
+.card strong{color:var(--text)}
+.card .hl{color:var(--green);font-weight:600}
+.card .hl-c{color:var(--cyan);font-weight:600}
+
+/* ========== TUJUAN ========== */
+.goal-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.goal-list li{
+  display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-surface);
+  border:1px solid var(--border);border-radius:var(--radius);font-size:.9rem;color:var(--text-2);
+}
+.goal-list .ico{
+  flex-shrink:0;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;background:rgba(0,229,255,.12);font-size:.9rem;
+}
+
+/* ========== ACCORDION ========== */
+.acc-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;background:var(--bg-surface)}
+.acc-head{
+  width:100%;display:flex;align-items:center;gap:12px;padding:16px;
+  background:var(--bg-surface);border:none;cursor:pointer;font-family:var(--f-ui);
+  font-weight:600;font-size:.95rem;color:var(--text);text-align:left;transition:background .2s;
+}
+.acc-head:hover{background:var(--bg-elev)}
+.acc-head .acc-ico{
+  flex-shrink:0;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-family:var(--f-code);font-size:.8rem;font-weight:700;
+  background:rgba(0,229,255,.12);color:var(--cyan);
+}
+.acc-head .acc-arrow{margin-left:auto;transition:transform .3s;color:var(--text-3);font-size:.8rem}
+.acc-item.open .acc-arrow{transform:rotate(180deg);color:var(--cyan)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.acc-item.open .acc-body{max-height:5000px}
+.acc-body-inner{padding:0 16px 18px;color:var(--text-2);font-size:.88rem}
+.acc-body-inner p{margin-bottom:10px}
+.acc-body-inner ul{margin:8px 0 12px 18px;display:flex;flex-direction:column;gap:5px}
+.acc-body-inner li{font-size:.86rem}
+.acc-body-inner h4{color:var(--text);margin:14px 0 8px;font-size:.95rem}
+
+/* Tabel materi */
+.mat-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.8rem;overflow:hidden;border-radius:8px}
+.mat-table th{background:var(--bg-elev);color:var(--cyan);padding:8px 10px;text-align:left;font-family:var(--f-code);font-size:.72rem;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.mat-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:top}
+.mat-table tr:last-child td{border-bottom:none}
+.mat-table tr:hover td{background:rgba(0,229,255,.03)}
+.mat-table code{font-size:.72rem;padding:1px 5px}
+
+/* ========== CODE BLOCK ========== */
+.code-block{
+  background:var(--bg-code);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;font-family:var(--f-code);font-size:.78rem;line-height:1.7;
+  overflow-x:auto;margin:12px 0;color:#abb2bf;position:relative;white-space:pre-wrap;
+  word-break:break-word;
+}
+.code-block .tag{color:#e06c75}
+.code-block .attr{color:#d19a66}
+.code-block .str{color:#98c379}
+.code-block .cmt{color:#5c6370;font-style:italic}
+.code-block .punct{color:#abb2bf}
+.code-block .num{color:#d19a66}
+.code-label{
+  position:absolute;top:-9px;right:12px;font-family:var(--f-code);font-size:.58rem;
+  padding:2px 10px;border-radius:var(--pill);background:var(--bg-surface);
+  border:1px solid var(--border);color:var(--cyan);letter-spacing:.5px;
+}
+
+/* ========== LAB MAYA ========== */
+.shortcut-bar{
+  display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;padding:10px;
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;
+}
+.sc-btn{
+  font-family:var(--f-code);font-size:.76rem;font-weight:600;padding:7px 11px;
+  border-radius:8px;border:1px solid var(--border-light);background:var(--bg-elev);
+  color:var(--cyan);cursor:pointer;transition:all .15s;user-select:none;white-space:nowrap;
+}
+.sc-btn:hover{background:rgba(0,229,255,.14);border-color:var(--cyan);transform:translateY(-1px)}
+.sc-btn:active{transform:scale(.94)}
+.sc-btn.green{color:var(--green)}
+.sc-btn.green:hover{background:rgba(57,255,20,.12);border-color:var(--green)}
+.sc-btn.mag{color:var(--magenta)}
+.sc-btn.mag:hover{background:rgba(255,0,255,.12);border-color:var(--magenta)}
+.sc-btn.ylw{color:var(--yellow)}
+.sc-btn.ylw:hover{background:rgba(255,203,107,.12);border-color:var(--yellow)}
+.sc-label{font-family:var(--f-code);font-size:.68rem;color:var(--text-3);width:100%;margin-bottom:2px}
+
+.editor-wrap{position:relative;margin-bottom:14px}
+.editor-wrap textarea{
+  width:100%;min-height:230px;resize:vertical;background:var(--bg-code);
+  color:#abb2bf;font-family:var(--f-code);font-size:.8rem;line-height:1.65;
+  padding:14px;border:1px solid var(--border);border-radius:12px;
+  outline:none;transition:border-color .2s,box-shadow .2s;tab-size:2;
+}
+.editor-wrap textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.12)}
+
+.preview-label{
+  display:flex;align-items:center;gap:8px;font-family:var(--f-code);font-size:.72rem;
+  color:var(--text-3);margin-bottom:8px;
+}
+.preview-label::before{content:'●';color:var(--red);font-size:.7rem}
+.preview-label::after{content:'●';color:var(--yellow);font-size:.7rem;margin-left:-4px}
+.preview-box{
+  background:#fff;color:#1a1a1a;border-radius:12px;min-height:180px;padding:16px;
+  border:1px solid var(--border);overflow:auto;font-family:var(--f-ui);font-size:.9rem;
+  line-height:1.5;
+}
+.preview-box:empty::before{content:'Preview akan muncul di sini...';color:#999;font-style:italic}
+
+/* ========== LKPD ========== */
+.lkpd-step{
+  display:flex;gap:12px;align-items:flex-start;padding:13px 14px;background:var(--bg-surface);
+  border:1.5px solid var(--border);border-radius:12px;margin-bottom:10px;cursor:pointer;
+  transition:all .2s;font-size:.88rem;color:var(--text-2);
+}
+.lkpd-step:hover{border-color:rgba(0,229,255,.4)}
+.lkpd-step.checked{border-color:var(--green);background:rgba(57,255,20,.05);color:var(--text)}
+.lkpd-step .chk{
+  flex-shrink:0;width:24px;height:24px;border-radius:6px;border:2px solid var(--border-light);
+  display:flex;align-items:center;justify-content:center;font-size:.85rem;
+  color:transparent;transition:all .2s;font-weight:700;
+}
+.lkpd-step.checked .chk{background:var(--green);border-color:var(--green);color:#0b0e14}
+.lkpd-step .num{flex-shrink:0;font-family:var(--f-code);font-weight:700;color:var(--text-3);font-size:.78rem;margin-top:2px;min-width:20px}
+.lkpd-step.checked .num{color:var(--green)}
+.lkpd-note textarea{
+  width:100%;min-height:110px;resize:vertical;background:var(--bg-code);color:var(--text);
+  font-family:var(--f-ui);font-size:.88rem;line-height:1.6;padding:14px;
+  border:1px solid var(--border);border-radius:12px;outline:none;transition:border-color .2s;
+}
+.lkpd-note textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.12)}
+.lkpd-progress{
+  display:flex;align-items:center;gap:10px;margin:14px 0;font-family:var(--f-code);
+  font-size:.78rem;color:var(--text-2);
+}
+.lkpd-bar{flex:1;height:8px;background:var(--bg-surface);border-radius:var(--pill);overflow:hidden}
+.lkpd-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .4s ease;border-radius:var(--pill)}
+
+/* ===== LKPD SOAL ESAI ===== */
+.lkpd-section-tag{
+  display:inline-block;font-family:var(--f-code);font-size:.68rem;letter-spacing:1px;
+  color:var(--magenta);border:1px solid rgba(255,0,255,.35);background:rgba(255,0,255,.07);
+  padding:3px 12px;border-radius:var(--pill);margin-bottom:12px;
+}
+.essay-item{
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px;margin-bottom:14px;transition:border-color .25s;
+}
+.essay-item.correct{border-color:var(--green);background:rgba(57,255,20,.04)}
+.essay-item.wrong{border-color:var(--red);background:rgba(255,85,85,.04)}
+.essay-num{
+  font-family:var(--f-code);font-size:.7rem;color:var(--cyan);letter-spacing:1px;
+  margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.essay-num .badge{
+  font-family:var(--f-ui);font-size:.6rem;letter-spacing:.5px;padding:2px 8px;border-radius:var(--pill);
+  background:var(--bg-elev);color:var(--text-3);border:1px solid var(--border-light);
+}
+.essay-num .badge.singkat{color:var(--yellow);border-color:rgba(255,203,107,.4)}
+.essay-num .badge.kode{color:var(--green);border-color:rgba(57,255,20,.4)}
+.essay-num .badge.uraian{color:var(--blue);border-color:rgba(77,158,255,.4)}
+.essay-q{font-weight:600;font-size:.9rem;color:var(--text);margin-bottom:10px;line-height:1.5}
+.essay-input{
+  width:100%;min-height:70px;resize:vertical;background:var(--bg-code);color:var(--text);
+  font-family:var(--f-ui);font-size:.86rem;line-height:1.55;padding:12px;
+  border:1.5px solid var(--border);border-radius:10px;outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.essay-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.1)}
+.essay-input.code-input{font-family:var(--f-code);font-size:.8rem;color:var(--cyan)}
+.essay-hint{
+  font-size:.75rem;color:var(--text-3);font-family:var(--f-code);margin-top:8px;
+  padding:8px 10px;background:rgba(0,229,255,.04);border-left:2px solid var(--cyan);
+  border-radius:0 6px 6px 0;display:none;
+}
+.essay-hint.show{display:block}
+.essay-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.essay-fb{
+  margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.8rem;
+  display:none;animation:fadeIn .3s ease;align-items:flex-start;gap:8px;line-height:1.5;
+}
+.essay-fb.show{display:flex}
+.essay-fb.ok{background:rgba(57,255,20,.08);border:1px solid rgba(57,255,20,.3);color:var(--green)}
+.essay-fb.no{background:rgba(255,85,85,.08);border:1px solid rgba(255,85,85,.3);color:#ff9999}
+.essay-fb.tip{background:rgba(255,203,107,.08);border:1px solid rgba(255,203,107,.3);color:var(--yellow)}
+.essay-score-box{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:14px 16px;background:var(--bg-elev);border:1px solid var(--border);
+  border-radius:var(--radius);margin-top:6px;
+}
+.essay-score-box .txt{font-family:var(--f-code);font-size:.82rem;color:var(--text-2)}
+.essay-score-box .txt b{color:var(--green);font-size:1rem}
+
+/* ========== KUIS ========== */
+.quiz-top{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-bottom:16px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);position:sticky;top:62px;z-index:50;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.quiz-progress-txt{font-family:var(--f-code);font-size:.82rem;color:var(--text-2)}
+.quiz-progress-txt b{color:var(--cyan)}
+.quiz-score-txt{font-family:var(--f-code);font-size:.82rem;color:var(--text-2)}
+.quiz-score-txt b{color:var(--green)}
+.quiz-bar{width:100%;height:6px;background:var(--bg-surface);border-radius:var(--pill);overflow:hidden;margin-top:6px;flex-basis:100%}
+.quiz-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .4s ease}
+
+.q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 16px;margin-bottom:16px}
+.q-num{font-family:var(--f-code);font-size:.7rem;color:var(--cyan);letter-spacing:1px;margin-bottom:6px}
+.q-text{font-weight:600;font-size:.95rem;color:var(--text);margin-bottom:14px;line-height:1.5}
+.q-opts{display:flex;flex-direction:column;gap:9px}
+.q-opt{
+  display:flex;align-items:flex-start;gap:11px;padding:13px 14px;border-radius:12px;
+  background:var(--bg-surface);border:1.5px solid var(--border);cursor:pointer;
+  transition:all .2s;font-size:.88rem;color:var(--text-2);text-align:left;
+  width:100%;font-family:var(--f-ui);line-height:1.45;
+}
+.q-opt:hover:not(:disabled){border-color:rgba(0,229,255,.45);background:rgba(0,229,255,.05)}
+.q-opt .mark{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border-light);
+  display:flex;align-items:center;justify-content:center;font-family:var(--f-code);
+  font-size:.72rem;font-weight:700;color:var(--text-3);transition:all .2s;
+}
+.q-opt.selected{border-color:var(--cyan);background:rgba(0,229,255,.08);color:var(--text)}
+.q-opt.selected .mark{background:var(--cyan);border-color:var(--cyan);color:#0b0e14}
+.q-opt.correct{border-color:var(--green);background:rgba(57,255,20,.1);color:var(--text)}
+.q-opt.correct .mark{background:var(--green);border-color:var(--green);color:#0b0e14}
+.q-opt.wrong{border-color:var(--red);background:rgba(255,85,85,.1);color:var(--text)}
+.q-opt.wrong .mark{background:var(--red);border-color:var(--red);color:#fff}
+.q-opt:disabled{cursor:default}
+.q-feedback{
+  margin-top:10px;padding:10px 14px;border-radius:10px;font-size:.82rem;
+  display:none;animation:fadeIn .3s ease;align-items:flex-start;gap:8px;
+}
+.q-feedback.show{display:flex}
+.q-feedback.ok{background:rgba(57,255,20,.08);border:1px solid rgba(57,255,20,.3);color:var(--green)}
+.q-feedback.no{background:rgba(255,85,85,.08);border:1px solid rgba(255,85,85,.3);color:#ff9999}
+
+.result-card{text-align:center;padding:32px 20px}
+.result-circle{
+  width:140px;height:140px;border-radius:50%;margin:0 auto 18px;display:flex;
+  align-items:center;justify-content:center;position:relative;
+  background:conic-gradient(var(--cyan) 0deg,var(--bg-surface) 0deg);
+}
+.result-circle::after{content:'';position:absolute;inset:8px;border-radius:50%;background:var(--bg-card)}
+.result-circle .val{position:relative;z-index:1;font-family:var(--f-code);font-weight:700;font-size:2.2rem;color:var(--cyan)}
+.result-card h2{margin-bottom:6px}
+.result-card p{color:var(--text-2);font-size:.9rem;margin-bottom:8px}
+.result-card .score-big{font-family:var(--f-code);font-size:1.1rem;color:var(--green);font-weight:700;margin-bottom:18px}
+
+/* ========== RESPONSIF ========== */
+@media (max-width:520px){
+  html{font-size:15px}
+  .wrap{padding:18px 12px 44px}
+  .card{padding:16px 14px;border-radius:var(--radius)}
+  h1{font-size:1.6rem}h2{font-size:1.25rem}
+  .cover .btn-primary{padding:15px 30px;font-size:.94rem}
+  .topbar{padding:10px 12px}
+  .topbar .tb-title{font-size:.7rem}
+  .roadmap-wrap{padding:20px 12px 50px}
+  .node-card{max-width:230px;padding:12px 13px}
+  .node-num{width:36px;height:36px;font-size:.88rem}
+  .node-title{font-size:.86rem}
+  .node-desc{font-size:.7rem}
+  .code-block{font-size:.72rem;padding:12px}
+  .sc-btn{font-size:.72rem;padding:6px 9px}
+  .editor-wrap textarea{min-height:200px;font-size:.76rem}
+  .quiz-top{top:56px;padding:12px}
+  .q-card{padding:15px 13px}
+  .acc-head{font-size:.88rem;padding:14px}
+  .acc-body-inner{padding:0 13px 15px;font-size:.84rem}
+  .essay-input{font-size:.82rem}
+  .mat-table{font-size:.72rem}
+  .mat-table th,.mat-table td{padding:6px 7px}
+}
+@media (min-width:768px){
+  .wrap{padding:30px 24px 60px}
+  .cover h1{font-size:3.2rem}
+  .node-card{max-width:280px}
+  .preview-box{min-height:220px}
+}
+@media (max-width:380px){
+  .node:nth-child(odd){padding-right:46%}
+  .node:nth-child(even){padding-left:46%}
+  .node-card{max-width:200px;padding:10px 11px}
+  .node-title{font-size:.8rem}
+  .node-desc{font-size:.66rem}
+  .node-num{width:32px;height:32px;font-size:.8rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== SCREEN: COVER ==================== -->
+<section class="screen active" id="screen-cover">
+  <div class="cover">
+    <div class="cover-orb"></div>
+    <div class="cover-badge">Informatika SMA · CodeQuest</div>
+    <h1>HTML &amp; VS Code<br><span class="grad">Mastery</span></h1>
+    <p class="cover-sub">Belajar Ngoding Langsung dari HP — <span class="hl">Informatika SMA</span></p>
+    <div class="cover-code">
+      <span class="k">const</span> kamu = <span class="s">"Calon Developer"</span>;<br>
+      <span class="k">function</span> mulai() { <span class="k">return</span> <span class="s">"🚀"</span>; }
+    </div>
+    <button class="btn btn-primary" onclick="goTo('screen-roadmap')">MULAI NGODING →</button>
+  </div>
+</section>
+
+<!-- ==================== SCREEN: ROADMAP ==================== -->
+<section class="screen" id="screen-roadmap">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-cover')">← Cover</button>
+    <div class="tb-title">// peta jalur belajar</div>
+  </div>
+  <div class="roadmap-wrap">
+    <h2 class="roadmap-title">Peta Jalur Belajar</h2>
+    <p class="roadmap-sub">Ikuti 5 stasiun secara berurutan untuk menguasai HTML &amp; VS Code</p>
+    <div class="roadmap">
+      <div class="node" tabindex="0" onclick="goTo('screen-tujuan')">
+        <div class="node-num">1</div>
+        <div class="node-card">
+          <span class="node-status">START</span>
+          <span class="node-title">Tujuan Belajar</span>
+          <span class="node-desc">// capaian pembelajaran</span>
+        </div>
+      </div>
+      <div class="node" tabindex="0" onclick="goTo('screen-materi')">
+        <div class="node-num">2</div>
+        <div class="node-card">
+          <span class="node-status">THEORY</span>
+          <span class="node-title">Materi</span>
+          <span class="node-desc">// 7 tab lengkap</span>
+        </div>
+      </div>
+      <div class="node" tabindex="0" onclick="goTo('screen-lab')">
+        <div class="node-num">3</div>
+        <div class="node-card">
+          <span class="node-status">PRACTICE</span>
+          <span class="node-title">Lab Maya</span>
+          <span class="node-desc">// simulator code editor</span>
+        </div>
+      </div>
+      <div class="node" tabindex="0" onclick="goTo('screen-lkpd')">
+        <div class="node-num">4</div>
+        <div class="node-card">
+          <span class="node-status">TASK</span>
+          <span class="node-title">LKPD Interaktif</span>
+          <span class="node-desc">// praktikum + soal</span>
+        </div>
+      </div>
+      <div class="node" tabindex="0" onclick="goTo('screen-kuis')">
+        <div class="node-num">5</div>
+        <div class="node-card">
+          <span class="node-status">QUIZ</span>
+          <span class="node-title">Kuis</span>
+          <span class="node-desc">// 25 soal pilihan ganda</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SCREEN: TUJUAN ==================== -->
+<section class="screen" id="screen-tujuan">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-roadmap')">← Peta Jalur</button>
+    <div class="tb-title">Stasiun 1 · Tujuan</div>
+  </div>
+  <div class="wrap">
+    <div class="module-head">
+      <span class="tag">Stasiun 01</span>
+      <h2>Tujuan Pembelajaran</h2>
+      <p>Apa yang akan kamu capai di modul ini</p>
+    </div>
+    <div class="card">
+      <h3>🎯 Capaian Pembelajaran</h3>
+      <p>Memahami antarmuka <strong class="hl-c">Visual Studio Code</strong> dan mampu menulis struktur dasar <strong class="hl">HTML</strong> langsung menggunakan simulator di smartphone.</p>
+      <ul class="goal-list">
+        <li><span class="ico">🖥️</span><span>Mengenali bagian-bagian antarmuka VS Code: Explorer, Editor, Terminal, dan Activity Bar.</span></li>
+        <li><span class="ico">🧩</span><span>Memahami fungsi ekstensi Live Server dan Emmet untuk produktivitas coding.</span></li>
+        <li><span class="ico">📝</span><span>Menulis struktur dasar HTML: <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>, heading, paragraf, link, gambar, list, tabel, dan form.</span></li>
+        <li><span class="ico">🎨</span><span>Memahami atribut HTML (id, class, href, src, alt, target) dan semantic HTML.</span></li>
+        <li><span class="ico">⚡</span><span>Mempraktikkan langsung penulisan kode HTML menggunakan Lab Maya tanpa komputer.</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📌 Manfaat</h3>
+      <p>Setelah menyelesaikan modul ini, kamu dapat membuat halaman web sederhana sendiri langsung dari HP, dan siap melanjutkan ke materi CSS &amp; JavaScript.</p>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="goTo('screen-materi')">Lanjut ke Materi →</button>
+  </div>
+</section>
+
+<!-- ==================== SCREEN: MATERI ==================== -->
+<section class="screen" id="screen-materi">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-roadmap')">← Peta Jalur</button>
+    <div class="tb-title">Stasiun 2 · Materi</div>
+  </div>
+  <div class="wrap">
+    <div class="module-head">
+      <span class="tag">Stasiun 02</span>
+      <h2>Materi Pembelajaran</h2>
+      <p>7 tab materi — ketuk untuk membuka penjelasan</p>
+    </div>
+
+    <!-- TAB 1: VS CODE -->
+    <div class="acc-item" id="acc1">
+      <button class="acc-head" onclick="toggleAcc('acc1')">
+        <span class="acc-ico">01</span>
+        <span>Pengenalan Visual Studio Code</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          <p><strong>Visual Studio Code (VS Code)</strong> adalah editor kode gratis buatan Microsoft yang paling populer di dunia developer. Ringan, cepat, dan mendukung ribuan ekstensi.</p>
+          <h4>Bagian utama VS Code:</h4>
+          <ul>
+            <li><strong>Explorer</strong> — panel kiri untuk melihat file dan folder proyek.</li>
+            <li><strong>Editor</strong> — area tengah tempat menulis kode, dilengkapi pewarnaan sintaks (syntax highlighting).</li>
+            <li><strong>Terminal</strong> — panel bawah untuk menjalankan perintah (buka dengan <code>Ctrl + `</code>).</li>
+            <li><strong>Activity Bar</strong> — ikon navigasi di paling kiri (Explorer, Search, Source Control, Extensions).</li>
+            <li><strong>Status Bar</strong> — baris bawah menampilkan info file, encoding, dan baris kursor.</li>
+          </ul>
+          <h4>Ekstensi wajib untuk pemula:</h4>
+          <ul>
+            <li><strong>Live Server</strong> — preview halaman HTML secara live di browser.</li>
+            <li><strong>Prettier</strong> — merapikan format kode otomatis.</li>
+            <li><strong>HTML CSS Support</strong> — autocomplete untuk tag dan atribut HTML.</li>
+            <li><strong>Emmet</strong> — sudah built-in, menulis kode HTML lebih cepat dengan singkatan.</li>
+          </ul>
+          <div class="code-block">
+            <span class="code-label">shortcut</span>
+<span class="cmt">// Shortcut penting di VS Code</span>
+<span class="attr">Ctrl</span> + <span class="attr">N</span>        <span class="cmt">→ File baru</span>
+<span class="attr">Ctrl</span> + <span class="attr">S</span>        <span class="cmt">→ Simpan file</span>
+<span class="attr">Ctrl</span> + <span class="attr">P</span>        <span class="cmt">→ Cari file cepat</span>
+<span class="attr">Ctrl</span> + <span class="attr">Shift</span> + <span class="attr">P</span> <span class="cmt">→ Command Palette</span>
+<span class="attr">Ctrl</span> + <span class="attr">`</span>        <span class="cmt">→ Buka Terminal</span>
+<span class="attr">Ctrl</span> + <span class="attr">/</span>        <span class="cmt">→ Komentar baris</span>
+<span class="attr">Alt</span> + <span class="attr">↑/↓</span>     <span class="cmt">→ Pindah baris kode</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: STRUKTUR HTML -->
+    <div class="acc-item" id="acc2">
+      <button class="acc-head" onclick="toggleAcc('acc2')">
+        <span class="acc-ico">02</span>
+        <span>Struktur Dasar HTML</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          <p><strong>HTML (HyperText Markup Language)</strong> adalah bahasa markup untuk membuat struktur halaman web. Ditulis menggunakan <strong>tag</strong> — diawali <code>&lt;tag&gt;</code> dan ditutup <code>&lt;/tag&gt;</code>.</p>
+          <h4>Struktur dasar dokumen HTML:</h4>
+          <div class="code-block">
+            <span class="code-label">struktur.html</span>
+<span class="punct">&lt;!</span><span class="tag">DOCTYPE</span> <span class="attr">html</span><span class="punct">&gt;</span>
+<span class="punct">&lt;</span><span class="tag">html</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">head</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">title</span><span class="punct">&gt;</span>Judul Halaman<span class="punct">&lt;/</span><span class="tag">title</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;/</span><span class="tag">head</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">body</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">h1</span><span class="punct">&gt;</span>Hello World<span class="punct">&lt;/</span><span class="tag">h1</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;/</span><span class="tag">body</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">html</span><span class="punct">&gt;</span>
+          </div>
+          <h4>Tag-tag penting:</h4>
+          <ul>
+            <li><code>&lt;html&gt;</code> — elemen akar seluruh halaman.</li>
+            <li><code>&lt;head&gt;</code> — info halaman (judul, meta, stylesheet).</li>
+            <li><code>&lt;body&gt;</code> — isi yang tampil di browser.</li>
+            <li><code>&lt;h1&gt;</code> s.d. <code>&lt;h6&gt;</code> — heading, dari terbesar ke terkecil.</li>
+            <li><code>&lt;p&gt;</code> — paragraf teks.</li>
+            <li><code>&lt;a href="..."&gt;</code> — membuat link.</li>
+            <li><code>&lt;img src="..."&gt;</code> — menampilkan gambar.</li>
+            <li><code>&lt;b&gt;</code> — teks tebal, <code>&lt;i&gt;</code> — teks miring.</li>
+            <li><code>&lt;hr&gt;</code> — garis pemisah horizontal.</li>
+            <li><code>&lt;br&gt;</code> — pindah baris (line break).</li>
+          </ul>
+          <div class="code-block">
+            <span class="code-label">contoh.html</span>
+<span class="punct">&lt;</span><span class="tag">h1</span><span class="punct">&gt;</span>Nama Saya<span class="punct">&lt;/</span><span class="tag">h1</span><span class="punct">&gt;</span>
+<span class="punct">&lt;</span><span class="tag">p</span><span class="punct">&gt;</span>Hobi saya <span class="punct">&lt;</span><span class="tag">b</span><span class="punct">&gt;</span>membaca<span class="punct">&lt;/</span><span class="tag">b</span><span class="punct">&gt;</span><span class="punct">&lt;/</span><span class="tag">p</span><span class="punct">&gt;</span>
+<span class="punct">&lt;</span><span class="tag">p</span><span class="punct">&gt;</span>Ini <span class="punct">&lt;</span><span class="tag">i</span><span class="punct">&gt;</span>miring<span class="punct">&lt;/</span><span class="tag">i</span><span class="punct">&gt;</span><span class="punct">&lt;/</span><span class="tag">p</span><span class="punct">&gt;</span>
+<span class="punct">&lt;</span><span class="tag">hr</span><span class="punct">&gt;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: LIST & TABEL (BARU) -->
+    <div class="acc-item" id="acc3">
+      <button class="acc-head" onclick="toggleAcc('acc3')">
+        <span class="acc-ico">03</span>
+        <span>List &amp; Tabel</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          <h4>📋 List (Daftar)</h4>
+          <p>HTML menyediakan dua jenis list utama:</p>
+          <ul>
+            <li><strong>Unordered List</strong> — daftar dengan bullet (titik). Menggunakan tag <code>&lt;ul&gt;</code> dan tiap item <code>&lt;li&gt;</code>.</li>
+            <li><strong>Ordered List</strong> — daftar bernomor. Menggunakan tag <code>&lt;ol&gt;</code> dan tiap item <code>&lt;li&gt;</code>.</li>
+          </ul>
+          <div class="code-block">
+            <span class="code-label">list.html</span>
+<span class="punct">&lt;</span><span class="tag">ul</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">li</span><span class="punct">&gt;</span>HTML<span class="punct">&lt;/</span><span class="tag">li</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">li</span><span class="punct">&gt;</span>CSS<span class="punct">&lt;/</span><span class="tag">li</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">ul</span><span class="punct">&gt;</span>
+
+<span class="punct">&lt;</span><span class="tag">ol</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">li</span><span class="punct">&gt;</span>Langkah pertama<span class="punct">&lt;/</span><span class="tag">li</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">li</span><span class="punct">&gt;</span>Langkah kedua<span class="punct">&lt;/</span><span class="tag">li</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">ol</span><span class="punct">&gt;</span>
+          </div>
+          <h4>📊 Tabel</h4>
+          <p>Tabel dibuat dengan <code>&lt;table&gt;</code>, baris <code>&lt;tr&gt;</code>, header <code>&lt;th&gt;</code>, dan sel data <code>&lt;td&gt;</code>.</p>
+          <div class="code-block">
+            <span class="code-label">tabel.html</span>
+<span class="punct">&lt;</span><span class="tag">table</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">tr</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">th</span><span class="punct">&gt;</span>Nama<span class="punct">&lt;/</span><span class="tag">th</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">th</span><span class="punct">&gt;</span>Kelas<span class="punct">&lt;/</span><span class="tag">th</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;/</span><span class="tag">tr</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">tr</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">td</span><span class="punct">&gt;</span>Budi<span class="punct">&lt;/</span><span class="tag">td</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">td</span><span class="punct">&gt;</span>X IPA 1<span class="punct">&lt;/</span><span class="tag">td</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;/</span><span class="tag">tr</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">table</span><span class="punct">&gt;</span>
+          </div>
+          <table class="mat-table">
+            <tr><th>Tag</th><th>Fungsi</th></tr>
+            <tr><td><code>&lt;ul&gt;</code></td><td>List bullet (tidak berurut)</td></tr>
+            <tr><td><code>&lt;ol&gt;</code></td><td>List bernomor (berurut)</td></tr>
+            <tr><td><code>&lt;li&gt;</code></td><td>Item dalam list</td></tr>
+            <tr><td><code>&lt;table&gt;</code></td><td>Membuat tabel</td></tr>
+            <tr><td><code>&lt;tr&gt;</code></td><td>Baris tabel (table row)</td></tr>
+            <tr><td><code>&lt;th&gt;</code></td><td>Header kolom tabel</td></tr>
+            <tr><td><code>&lt;td&gt;</code></td><td>Sel data tabel</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: ATRIBUT HTML (BARU) -->
+    <div class="acc-item" id="acc4">
+      <button class="acc-head" onclick="toggleAcc('acc4')">
+        <span class="acc-ico">04</span>
+        <span>Atribut HTML</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          <p><strong>Atribut</strong> adalah informasi tambahan yang ditulis di dalam tag pembuka. Format: <code>nama="nilai"</code>.</p>
+          <h4>Atribut yang wajib diketahui:</h4>
+          <table class="mat-table">
+            <tr><th>Atribut</th><th>Fungsi</th><th>Contoh</th></tr>
+            <tr><td><code>href</code></td><td>Alamat tujuan link</td><td><code>&lt;a href="..."&gt;</code></td></tr>
+            <tr><td><code>src</code></td><td>Sumber gambar/file</td><td><code>&lt;img src="..."&gt;</code></td></tr>
+            <tr><td><code>alt</code></td><td>Teks alternatif gambar</td><td><code>&lt;img alt="..."&gt;</code></td></tr>
+            <tr><td><code>title</code></td><td>Tooltip saat hover</td><td><code>&lt;a title="..."&gt;</code></td></tr>
+            <tr><td><code>id</code></td><td>Identitas unik elemen</td><td><code>&lt;div id="..."&gt;</code></td></tr>
+            <tr><td><code>class</code></td><td>Grup elemen untuk styling</td><td><code>&lt;p class="..."&gt;</code></td></tr>
+            <tr><td><code>target</code></td><td>Buka link di tab baru</td><td><code>&lt;a target="_blank"&gt;</code></td></tr>
+            <tr><td><code>style</code></td><td>Inline CSS</td><td><code>&lt;p style="color:red"&gt;</code></td></tr>
+          </table>
+          <h4>Contoh penggunaan lengkap:</h4>
+          <div class="code-block">
+            <span class="code-label">atribut.html</span>
+<span class="punct">&lt;</span><span class="tag">a</span> <span class="attr">href</span>=<span class="str">"https://google.com"</span> <span class="attr">target</span>=<span class="str">"_blank"</span><span class="punct">&gt;</span>
+  Buka Google
+<span class="punct">&lt;/</span><span class="tag">a</span><span class="punct">&gt;</span>
+
+<span class="punct">&lt;</span><span class="tag">img</span> <span class="attr">src</span>=<span class="str">"foto.jpg"</span> <span class="attr">alt</span>=<span class="str">"Foto Profil"</span> <span class="attr">width</span>=<span class="str">"100"</span><span class="punct">&gt;</span>
+
+<span class="punct">&lt;</span><span class="tag">div</span> <span class="attr">id</span>=<span class="str">"header"</span> <span class="attr">class</span>=<span class="str">"container"</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">p</span> <span class="attr">style</span>=<span class="str">"color: cyan;"</span><span class="punct">&gt;</span>Teks berwarna<span class="punct">&lt;/</span><span class="tag">p</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">div</span><span class="punct">&gt;</span>
+          </div>
+          <p><strong>Perbedaan <code>id</code> dan <code>class</code>:</strong></p>
+          <ul>
+            <li><code>id</code> harus <strong>unik</strong> — hanya boleh satu elemen dengan id tertentu per halaman.</li>
+            <li><code>class</code> bisa dipakai <strong>berulang</strong> di banyak elemen.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: LINK & GAMBAR (BARU) -->
+    <div class="acc-item" id="acc5">
+      <button class="acc-head" onclick="toggleAcc('acc5')">
+        <span class="acc-ico">05</span>
+        <span>Link &amp; Gambar</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          <h4>🔗 Link (Hyperlink)</h4>
+          <p>Link dibuat dengan tag <code>&lt;a&gt;</code> (anchor) dan atribut <code>href</code>. Ada dua jenis link:</p>
+          <ul>
+            <li><strong>Link eksternal</strong> — menuju ke situs lain (contoh: google.com).</li>
+            <li><strong>Link internal</strong> — menuju halaman lain di situs yang sama (contoh: tentang.html).</li>
+          </ul>
+          <div class="code-block">
+            <span class="code-label">link.html</span>
+<span class="cmt">&lt;!-- Link eksternal, buka tab baru --&gt;</span>
+<span class="punct">&lt;</span><span class="tag">a</span> <span class="attr">href</span>=<span class="str">"https://google.com"</span> <span class="attr">target</span>=<span class="str">"_blank"</span><span class="punct">&gt;</span>Google<span class="punct">&lt;/</span><span class="tag">a</span><span class="punct">&gt;</span>
+
+<span class="cmt">&lt;!-- Link ke halaman lain --&gt;</span>
+<span class="punct">&lt;</span><span class="tag">a</span> <span class="attr">href</span>=<span class="str">"tentang.html"</span><span class="punct">&gt;</span>Tentang Kami<span class="punct">&lt;/</span><span class="tag">a</span><span class="punct">&gt;</span>
+
+<span class="cmt">&lt;!-- Link ke email --&gt;</span>
+<span class="punct">&lt;</span><span class="tag">a</span> <span class="attr">href</span>=<span class="str">"mailto:guru@sekolah.id"</span><span class="punct">&gt;</span>Email Guru<span class="punct">&lt;/</span><span class="tag">a</span><span class="punct">&gt;</span>
+          </div>
+          <h4>🖼️ Gambar</h4>
+          <p>Gambar ditampilkan dengan tag <code>&lt;img&gt;</code>. Ini adalah <strong>self-closing tag</strong> — tidak punya tag penutup.</p>
+          <div class="code-block">
+            <span class="code-label">gambar.html</span>
+<span class="punct">&lt;</span><span class="tag">img</span> <span class="attr">src</span>=<span class="str">"logo.png"</span> <span class="attr">alt</span>=<span class="str">"Logo Sekolah"</span><span class="punct">&gt;</span>
+
+<span class="punct">&lt;</span><span class="tag">img</span> <span class="attr">src</span>=<span class="str">"foto.jpg"</span>
+     <span class="attr">alt</span>=<span class="str">"Foto Kegiatan"</span>
+     <span class="attr">width</span>=<span class="str">"300"</span>
+     <span class="attr">height</span>=<span class="str">"200"</span><span class="punct">&gt;</span>
+          </div>
+          <table class="mat-table">
+            <tr><th>Atribut</th><th>Fungsi</th></tr>
+            <tr><td><code>src</code></td><td>Path/lokasi file gambar (wajib)</td></tr>
+            <tr><td><code>alt</code></td><td>Teks pengganti jika gambar gagal dimuat</td></tr>
+            <tr><td><code>width</code></td><td>Lebar gambar (piksel)</td></tr>
+            <tr><td><code>height</code></td><td>Tinggi gambar (piksel)</td></tr>
+          </table>
+          <p>💡 <strong>Tips:</strong> atribut <code>alt</code> penting untuk aksesibilitas (screen reader) dan SEO.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: SEMANTIC HTML (BARU) -->
+    <div class="acc-item" id="acc6">
+      <button class="acc-head" onclick="toggleAcc('acc6')">
+        <span class="acc-ico">06</span>
+        <span>Semantic HTML</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          <p><strong>Semantic HTML</strong> adalah penggunaan tag yang <em>maknanya jelas</em> — tidak hanya <code>&lt;div&gt;</code> dan <code>&lt;span&gt;</code> untuk segalanya. Tag semantik membantu browser, mesin pencari, dan screen reader memahami struktur halaman.</p>
+          <h4>Tag semantik modern:</h4>
+          <table class="mat-table">
+            <tr><th>Tag</th><th>Fungsi</th></tr>
+            <tr><td><code>&lt;header&gt;</code></td><td>Bagian kepala halaman/section</td></tr>
+            <tr><td><code>&lt;nav&gt;</code></td><td>Navigasi (menu)</td></tr>
+            <tr><td><code>&lt;main&gt;</code></td><td>Konten utama halaman</td></tr>
+            <tr><td><code>&lt;section&gt;</code></td><td>Bagian tematik konten</td></tr>
+            <tr><td><code>&lt;article&gt;</code></td><td>Konten mandiri (artikel, berita)</td></tr>
+            <tr><td><code>&lt;aside&gt;</code></td><td>Konten sampingan (sidebar)</td></tr>
+            <tr><td><code>&lt;footer&gt;</code></td><td>Bagian kaki halaman</td></tr>
+          </table>
+          <h4>Contoh struktur semantik:</h4>
+          <div class="code-block">
+            <span class="code-label">semantic.html</span>
+<span class="punct">&lt;</span><span class="tag">header</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">h1</span><span class="punct">&gt;</span>Website Saya<span class="punct">&lt;/</span><span class="tag">h1</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">nav</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#"</span><span class="punct">&gt;</span>Home<span class="punct">&lt;/</span><span class="tag">a</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">a</span> <span class="attr">href</span>=<span class="str">"#"</span><span class="punct">&gt;</span>About<span class="punct">&lt;/</span><span class="tag">a</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;/</span><span class="tag">nav</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">header</span><span class="punct">&gt;</span>
+
+<span class="punct">&lt;</span><span class="tag">main</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">article</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">h2</span><span class="punct">&gt;</span>Artikel Terbaru<span class="punct">&lt;/</span><span class="tag">h2</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">p</span><span class="punct">&gt;</span>Isi artikel...<span class="punct">&lt;/</span><span class="tag">p</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;/</span><span class="tag">article</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">main</span><span class="punct">&gt;</span>
+
+<span class="punct">&lt;</span><span class="tag">footer</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">p</span><span class="punct">&gt;</span>&amp;copy; 2025 Website Saya<span class="punct">&lt;/</span><span class="tag">p</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">footer</span><span class="punct">&gt;</span>
+          </div>
+          <p>✅ <strong>Keuntungan semantic HTML:</strong> aksesibilitas lebih baik, SEO lebih ramah, dan kode lebih mudah dibaca.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: FORM DASAR (BARU) -->
+    <div class="acc-item" id="acc7">
+      <button class="acc-head" onclick="toggleAcc('acc7')">
+        <span class="acc-ico">07</span>
+        <span>Form Dasar</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-body-inner">
+          <p><strong>Form</strong> digunakan untuk mengumpulkan input dari pengguna — seperti login, pendaftaran, atau kuesioner.</p>
+          <h4>Struktur form dasar:</h4>
+          <div class="code-block">
+            <span class="code-label">form.html</span>
+<span class="punct">&lt;</span><span class="tag">form</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">label</span><span class="punct">&gt;</span>Nama:<span class="punct">&lt;/</span><span class="tag">label</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">input</span> <span class="attr">type</span>=<span class="str">"text"</span> <span class="attr">name</span>=<span class="str">"nama"</span><span class="punct">&gt;</span>
+
+  <span class="punct">&lt;</span><span class="tag">label</span><span class="punct">&gt;</span>Email:<span class="punct">&lt;/</span><span class="tag">label</span><span class="punct">&gt;</span>
+  <span class="punct">&lt;</span><span class="tag">input</span> <span class="attr">type</span>=<span class="str">"email"</span> <span class="attr">name</span>=<span class="str">"email"</span><span class="punct">&gt;</span>
+
+  <span class="punct">&lt;</span><span class="tag">button</span> <span class="attr">type</span>=<span class="str">"submit"</span><span class="punct">&gt;</span>Kirim<span class="punct">&lt;/</span><span class="tag">button</span><span class="punct">&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">form</span><span class="punct">&gt;</span>
+          </div>
+          <h4>Jenis input yang umum:</h4>
+          <table class="mat-table">
+            <tr><th>type</th><th>Fungsi</th></tr>
+            <tr><td><code>text</code></td><td>Input teks satu baris</td></tr>
+            <tr><td><code>email</code></td><td>Input email (validasi otomatis)</td></tr>
+            <tr><td><code>password</code></td><td>Input password (tersembunyi)</td></tr>
+            <tr><td><code>number</code></td><td>Input angka</td></tr>
+            <tr><td><code>checkbox</code></td><td>Kotak centang (bisa banyak)</td></tr>
+            <tr><td><code>radio</code></td><td>Pilihan tunggal</td></tr>
+            <tr><td><code>submit</code></td><td>Tombol kirim form</td></tr>
+          </table>
+          <h4>Elemen form lain:</h4>
+          <ul>
+            <li><code>&lt;textarea&gt;</code> — input teks multi-baris.</li>
+            <li><code>&lt;select&gt;</code> dan <code>&lt;option&gt;</code> — dropdown pilihan.</li>
+            <li><code>&lt;label&gt;</code> — label untuk input (terhubung lewat <code>for</code>).</li>
+          </ul>
+          <p>💡 <strong>Tips:</strong> selalu pasangkan <code>&lt;label&gt;</code> dengan <code>&lt;input&gt;</code> agar mudah diakses dan form lebih ramah pengguna.</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block" onclick="goTo('screen-lab')" style="margin-top:6px">Lanjut ke Lab Maya →</button>
+  </div>
+</section>
+
+<!-- ==================== SCREEN: LAB MAYA ==================== -->
+<section class="screen" id="screen-lab">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-roadmap')">← Peta Jalur</button>
+    <div class="tb-title">Stasiun 3 · Lab Maya</div>
+  </div>
+  <div class="wrap">
+    <div class="module-head">
+      <span class="tag">Stasiun 03</span>
+      <h2>Lab Maya · Code Editor</h2>
+      <p>Tulis HTML di HP-mu, ketuk tombol shortcut agar lebih mudah!</p>
+    </div>
+
+    <div class="card">
+      <div class="shortcut-bar" id="shortcutBar">
+        <span class="sc-label">⚡ Asisten Ketik — ketuk untuk sisipkan tag:</span>
+        <button class="sc-btn green" data-ins="<html>\n</html>">&lt;html&gt;</button>
+        <button class="sc-btn green" data-ins="<body>\n</body>">&lt;body&gt;</button>
+        <button class="sc-btn mag" data-ins="<head>\n</head>">&lt;head&gt;</button>
+        <button class="sc-btn ylw" data-ins="<h1></h1>">&lt;h1&gt;</button>
+        <button class="sc-btn ylw" data-ins="<h2></h2>">&lt;h2&gt;</button>
+        <button class="sc-btn ylw" data-ins="<h3></h3>">&lt;h3&gt;</button>
+        <button class="sc-btn" data-ins="<p></p>">&lt;p&gt;</button>
+        <button class="sc-btn" data-ins="<b></b>">&lt;b&gt;</button>
+        <button class="sc-btn" data-ins="<i></i>">&lt;i&gt;</button>
+        <button class="sc-btn" data-ins="<a href=\"\"></a>">&lt;a&gt;</button>
+        <button class="sc-btn" data-ins="<img src=\"\">">&lt;img&gt;</button>
+        <button class="sc-btn" data-ins="<hr>">&lt;hr&gt;</button>
+        <button class="sc-btn" data-ins="<br>">&lt;br&gt;</button>
+        <button class="sc-btn" data-ins="<ul>\n  <li></li>\n</ul>">&lt;ul&gt;</button>
+        <button class="sc-btn" data-ins="<ol>\n  <li></li>\n</ol>">&lt;ol&gt;</button>
+        <button class="sc-btn" data-ins="<li></li>">&lt;li&gt;</button>
+        <button class="sc-btn" data-ins="<table>\n  <tr>\n    <td></td>\n  </tr>\n</table>">&lt;table&gt;</button>
+        <button class="sc-btn" data-ins="<tr></tr>">&lt;tr&gt;</button>
+        <button class="sc-btn" data-ins="<td></td>">&lt;td&gt;</button>
+        <button class="sc-btn mag" data-ins="</>">&lt;/&gt;</button>
+        <button class="sc-btn green" data-ins="<>">&lt;&gt;</button>
+      </div>
+
+      <div class="editor-wrap">
+        <textarea id="codeEditor" spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Halaman Pertamaku&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Halo, Dunia!&lt;/h1&gt;
+  &lt;p&gt;Ini paragraf pertamaku di Lab Maya.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="btn btn-green btn-sm" onclick="runCode()">▶ Jalankan Kode</button>
+        <button class="btn btn-ghost btn-sm" onclick="clearPreview()">🗑 Bersihkan Preview</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetEditor()">↺ Reset Template</button>
+      </div>
+
+      <div class="preview-label">preview.html</div>
+      <div class="preview-box" id="previewBox"></div>
+    </div>
+
+    <button class="btn btn-primary btn-block" onclick="goTo('screen-lkpd')">Lanjut ke LKPD →</button>
+  </div>
+</section>
+
+<!-- ==================== SCREEN: LKPD ==================== -->
+<section class="screen" id="screen-lkpd">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-roadmap')">← Peta Jalur</button>
+    <div class="tb-title">Stasiun 4 · LKPD</div>
+  </div>
+  <div class="wrap">
+    <div class="module-head">
+      <span class="tag">Stasiun 04</span>
+      <h2>LKPD Interaktif</h2>
+      <p>Checklist praktikum + soal uraian interaktif</p>
+    </div>
+
+    <div class="card">
+      <span class="lkpd-section-tag">BAGIAN A · PRAKTIKUM</span>
+      <h3>📋 Checklist Praktikum</h3>
+      <p>Centang setiap langkah setelah kamu berhasil mengerjakannya di Lab Maya.</p>
+
+      <div class="lkpd-progress">
+        <span>Progress</span>
+        <div class="lkpd-bar"><div class="lkpd-bar-fill" id="lkpdFill"></div></div>
+        <span id="lkpdCount">0/9</span>
+      </div>
+
+      <div id="lkpdSteps">
+        <div class="lkpd-step" data-step="0"><span class="chk">✓</span><span class="num">1</span><span>Buka menu Lab Maya</span></div>
+        <div class="lkpd-step" data-step="1"><span class="chk">✓</span><span class="num">2</span><span>Gunakan tombol shortcut untuk membuat tag <code>&lt;h1&gt;</code> berisi nama kalian</span></div>
+        <div class="lkpd-step" data-step="2"><span class="chk">✓</span><span class="num">3</span><span>Buat tag <code>&lt;p&gt;</code> berisi hobi kalian</span></div>
+        <div class="lkpd-step" data-step="3"><span class="chk">✓</span><span class="num">4</span><span>Tambahkan tag <code>&lt;h3&gt;</code> di bawah hobi yang berisi cita-cita kalian</span></div>
+        <div class="lkpd-step" data-step="4"><span class="chk">✓</span><span class="num">5</span><span>Buat paragraf baru dengan tag <code>&lt;p&gt;</code> dan gunakan tag <code>&lt;b&gt;</code> di dalamnya untuk menebalkan kata yang penting</span></div>
+        <div class="lkpd-step" data-step="5"><span class="chk">✓</span><span class="num">6</span><span>Gunakan tag <code>&lt;i&gt;</code> untuk membuat teks bercetak miring</span></div>
+        <div class="lkpd-step" data-step="6"><span class="chk">✓</span><span class="num">7</span><span>Tambahkan tag <code>&lt;hr&gt;</code> di bagian paling bawah untuk membuat garis pemisah</span></div>
+        <div class="lkpd-step" data-step="7"><span class="chk">✓</span><span class="num">8</span><span>Tekan tombol <strong>Jalankan Kode</strong></span></div>
+        <div class="lkpd-step" data-step="8"><span class="chk">✓</span><span class="num">9</span><span>Pastikan semua teks dan format visual muncul dengan benar di layar putih</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="lkpd-section-tag">BAGIAN B · SOAL URAIAN</span>
+      <h3>✍️ Soal Uraian Interaktif</h3>
+      <p>Jawab 6 soal berikut. Klik <strong>Cek Jawaban</strong> untuk memvalidasi secara otomatis. Gunakan tombol <strong>Hint</strong> jika kesulitan.</p>
+
+      <div id="essayContainer"></div>
+
+      <div class="essay-score-box">
+        <div class="txt">Skor Uraian: <b id="essayScore">0</b> / 6</div>
+        <button class="btn btn-ghost btn-sm" onclick="resetEssay()">↺ Reset Jawaban</button>
+      </div>
+
+      <div id="essayAllDone" class="essay-fb ok" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <span class="lkpd-section-tag">BAGIAN C · REFLEKSI</span>
+      <h3>📝 Catatan Praktikum</h3>
+      <p>Tuliskan kesulitan, temuan, atau hal yang kamu pelajari selama praktikum.</p>
+      <div class="lkpd-note">
+        <textarea id="lkpdNote" placeholder="Contoh: Awalnya bingung menaruh tag <b> di dalam <p>, ternyata harus di antara <p> dan </p>..."></textarea>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <button class="btn btn-green btn-sm" onclick="saveLKPD()">💾 Simpan / Selesai</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetLKPD()">↺ Reset Checklist</button>
+      </div>
+      <div id="lkpdSavedMsg" class="q-feedback" style="margin-top:12px"></div>
+    </div>
+
+    <button class="btn btn-primary btn-block" onclick="goTo('screen-kuis')">Lanjut ke Kuis →</button>
+  </div>
+</section>
+
+<!-- ==================== SCREEN: KUIS ==================== -->
+<section class="screen" id="screen-kuis">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-roadmap')">← Peta Jalur</button>
+    <div class="tb-title">Stasiun 5 · Kuis</div>
+  </div>
+  <div class="wrap">
+    <div class="module-head">
+      <span class="tag">Stasiun 05</span>
+      <h2>Kuis Interaktif</h2>
+      <p>25 soal pilihan ganda · umpan balik langsung</p>
+    </div>
+
+    <div class="quiz-top">
+      <div class="quiz-progress-txt">Soal <b id="quizProgressNum">0</b> / 25 terjawab</div>
+      <div class="quiz-score-txt">Skor: <b id="quizScoreNum">0</b></div>
+      <div class="quiz-bar"><div class="quiz-bar-fill" id="quizBarFill"></div></div>
+    </div>
+
+    <div id="quizContainer"></div>
+
+    <div class="card result-card hidden" id="quizResult">
+      <div class="result-circle" id="resultCircle"><span class="val" id="resultVal">0</span></div>
+      <h2>Kuis Selesai!</h2>
+      <p id="resultMsg">Terus berlatih ya!</p>
+      <div class="score-big" id="resultScore">Skor: 0 / 25</div>
+      <button class="btn btn-primary" onclick="resetQuiz()">🔄 Ulangi Kuis</button>
+      <button class="btn btn-outline" style="margin-top:10px" onclick="goTo('screen-roadmap')">← Kembali ke Peta Jalur</button>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   NAVIGASI SCREEN
+   ============================================================ */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el){
+    el.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+/* ============================================================
+   ACCORDION MATERI
+   ============================================================ */
+function toggleAcc(id){
+  const item = document.getElementById(id);
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.acc-item').forEach(a => a.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('acc1').classList.add('open');
+});
+
+/* ============================================================
+   LAB MAYA
+   ============================================================ */
+const codeEditor = document.getElementById('codeEditor');
+
+document.getElementById('shortcutBar').addEventListener('click', (e) => {
+  const btn = e.target.closest('.sc-btn');
+  if(!btn) return;
+  const ins = btn.dataset.ins;
+  const start = codeEditor.selectionStart;
+  const end = codeEditor.selectionEnd;
+  const before = codeEditor.value.substring(0, start);
+  const after = codeEditor.value.substring(end);
+
+  let text = ins;
+  let cursorOffset = text.length;
+  if(text.includes('></') && !text.includes('\n')){
+    const mid = text.indexOf('>') + 1;
+    cursorOffset = mid;
+  }
+  codeEditor.value = before + text + after;
+  codeEditor.focus();
+  codeEditor.setSelectionRange(start + cursorOffset, start + cursorOffset);
+});
+
+function runCode(){
+  document.getElementById('previewBox').innerHTML = codeEditor.value;
+}
+function clearPreview(){
+  document.getElementById('previewBox').innerHTML = '';
+}
+function resetEditor(){
+  codeEditor.value = '<!DOCTYPE html>\n<html>\n<head>\n  <title>Halaman Pertamaku</title>\n</head>\n<body>\n  <h1>Halo, Dunia!</h1>\n  <p>Ini paragraf pertamaku di Lab Maya.</p>\n</body>\n</html>';
+  clearPreview();
+}
+
+/* ============================================================
+   LKPD CHECKLIST
+   ============================================================ */
+const lkpdSteps = document.getElementById('lkpdSteps');
+const lkpdFill = document.getElementById('lkpdFill');
+const lkpdCount = document.getElementById('lkpdCount');
+const LKPD_TOTAL = 9;
+let lkpdDone = new Set();
+
+lkpdSteps.addEventListener('click', (e) => {
+  const step = e.target.closest('.lkpd-step');
+  if(!step) return;
+  const idx = parseInt(step.dataset.step);
+  if(lkpdDone.has(idx)){
+    lkpdDone.delete(idx);
+    step.classList.remove('checked');
+  } else {
+    lkpdDone.add(idx);
+    step.classList.add('checked');
+  }
+  updateLKPD();
+});
+
+function updateLKPD(){
+  const n = lkpdDone.size;
+  lkpdCount.textContent = n + '/' + LKPD_TOTAL;
+  lkpdFill.style.width = (n / LKPD_TOTAL * 100) + '%';
+}
+
+function resetLKPD(){
+  lkpdDone.clear();
+  document.querySelectorAll('.lkpd-step').forEach(s => s.classList.remove('checked'));
+  updateLKPD();
+  const msg = document.getElementById('lkpdSavedMsg');
+  msg.className = 'q-feedback';
+  msg.textContent = '';
+}
+
+function saveLKPD(){
+  const note = document.getElementById('lkpdNote').value.trim();
+  const msg = document.getElementById('lkpdSavedMsg');
+  const essayScore = getEssayScore();
+
+  if(lkpdDone.size < LKPD_TOTAL){
+    msg.className = 'q-feedback no show';
+    msg.innerHTML = '⚠️ Masih ada langkah praktikum yang belum dicentang. (' + lkpdDone.size + '/' + LKPD_TOTAL + ')';
+    return;
+  }
+  if(essayScore < ESSAY.length){
+    msg.className = 'q-feedback no show';
+    msg.innerHTML = '⚠️ Masih ada soal uraian yang belum dijawab benar. Skor uraian: ' + essayScore + '/' + ESSAY.length;
+    return;
+  }
+  if(note.length < 5){
+    msg.className = 'q-feedback no show';
+    msg.innerHTML = '⚠️ Catatan praktikum masih kosong. Tuliskan minimal beberapa kata.';
+    return;
+  }
+  msg.className = 'q-feedback ok show';
+  msg.innerHTML = '✅ Hebat! LKPD selesai dengan lengkap — checklist, soal uraian, dan catatan semua terisi.';
+}
+
+/* ============================================================
+   LKPD SOAL URAIAN INTERAKTIF (6 SOAL)
+   ============================================================ */
+const ESSAY = [
+  {
+    type:'singkat',
+    badge:'SINGKAT',
+    q:'Sebutkan 3 bagian utama antarmuka Visual Studio Code yang wajib diketahui seorang pemula!',
+    hint:'Petunjuk: panel kiri untuk file, area tengah untuk menulis kode, panel bawah untuk perintah.',
+    keys:[['explorer','folder','file'],['editor','kode','menulis','coding'],['terminal','konsol','command']],
+    need:2,
+    exp:'Jawaban benar: <strong>Explorer</strong> (file), <strong>Editor</strong> (menulis kode), dan <strong>Terminal</strong> (menjalankan perintah).'
+  },
+  {
+    type:'kode',
+    badge:'KODE',
+    q:'Tuliskan tag HTML untuk membuat heading terbesar yang berisi teks "Halo"!',
+    hint:'Petunjuk: heading terbesar adalah <h1>, lalu tulis teks di antara tag pembuka dan penutup.',
+    validate: v => /<h1>\s*halo\s*<\/h1>/i.test(v.replace(/\s+/g,' ').trim()),
+    exp:'Jawaban benar: <code>&lt;h1&gt;Halo&lt;/h1&gt;</code>'
+  },
+  {
+    type:'kode',
+    badge:'KODE',
+    q:'Buat paragraf dengan tag <p> yang berisi: Hobi saya <b>membaca</b>. (tag <b> berada di dalam <p>)',
+    hint:'Petunjuk: tag <b> harus berada di antara <p> dan </p>.',
+    validate: v => {
+      const s = v.replace(/\s+/g,' ').trim().toLowerCase();
+      return /<p>\s*hobi saya\s*<b>\s*membaca\s*<\/b>\s*<\/p>/i.test(v.replace(/\s+/g,' ').trim()) ||
+             (/<p>/i.test(s) && /<b>/i.test(s) && /membaca/i.test(s) && /<\/b>/i.test(s) && /<\/p>/i.test(s));
+    },
+    exp:'Jawaban benar: <code>&lt;p&gt;Hobi saya &lt;b&gt;membaca&lt;/b&gt;&lt;/p&gt;</code>'
+  },
+  {
+    type:'uraian',
+    badge:'URAIAN',
+    q:'Apa fungsi ekstensi Live Server di VS Code? Jelaskan dengan bahasamu sendiri!',
+    hint:'Petunjuk: pikirkan tentang preview halaman web otomatis di browser.',
+    keys:[['preview','tampilan','menampilkan','lihat','tampil'],['browser','web','halaman'],['otomatis','auto','refresh','langsung','live']],
+    need:2,
+    exp:'Jawaban benar: Live Server menampilkan <strong>preview halaman web</strong> di <strong>browser secara otomatis</strong> setiap kali file disimpan.'
+  },
+  {
+    type:'kode',
+    badge:'KODE',
+    q:'Tuliskan struktur dasar dokumen HTML (minimal memuat: DOCTYPE, html, head, body).',
+    hint:'Petunjuk: diawali <!DOCTYPE html>, lalu <html> membungkus <head> dan <body>.',
+    validate: v => {
+      const s = v.toLowerCase();
+      return /<!doctype html/i.test(s) && /<html>/i.test(s) && /<\/html>/i.test(s) &&
+             /<head>/i.test(s) && /<\/head>/i.test(s) && /<body>/i.test(s) && /<\/body>/i.test(s);
+    },
+    exp:'Jawaban benar: <code>&lt;!DOCTYPE html&gt;</code> → <code>&lt;html&gt;</code> → <code>&lt;head&gt;...&lt;/head&gt;</code> → <code>&lt;body&gt;...&lt;/body&gt;</code> → <code>&lt;/html&gt;</code>'
+  },
+  {
+    type:'uraian',
+    badge:'URAIAN',
+    q:'Jelaskan perbedaan antara tag <b> dan <i> pada HTML, beserta contoh penggunaannya!',
+    hint:'Petunjuk: <b> untuk teks tebal, <i> untuk teks miring. Berikan contoh singkat.',
+    keys:[['tebal','bold','tebalkan'],['miring','italic','miringkan']],
+    need:2,
+    exp:'Jawaban benar: <code>&lt;b&gt;</code> membuat teks <strong>tebal</strong>, <code>&lt;i&gt;</code> membuat teks <em>miring</em>. Contoh: <code>&lt;b&gt;penting&lt;/b&gt;</code>, <code>&lt;i&gt;catatan&lt;/i&gt;</code>.'
+  }
+];
+
+const essayContainer = document.getElementById('essayContainer');
+const essayScoreEl = document.getElementById('essayScore');
+const essayAllDone = document.getElementById('essayAllDone');
+let essayState = [];
+
+function normalizeText(s){
+  return s.toLowerCase().replace(/[.,!?;:]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function checkEssayAnswer(idx, val){
+  const item = ESSAY[idx];
+  if(!val || val.trim().length < 2) return false;
+  if(item.validate) return item.validate(val);
+  const norm = normalizeText(val);
+  let found = 0;
+  item.keys.forEach(group => {
+    if(group.some(k => norm.includes(k))) found++;
+  });
+  return found >= item.need;
+}
+
+function renderEssay(){
+  essayContainer.innerHTML = '';
+  essayState = ESSAY.map(() => ({ checked:false, correct:false }));
+
+  ESSAY.forEach((item, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'essay-item';
+    wrap.id = 'essay-' + i;
+
+    const num = document.createElement('div');
+    num.className = 'essay-num';
+    num.innerHTML = 'SOAL ' + (i+1) + ' / ' + ESSAY.length +
+      ' <span class="badge ' + item.type + '">' + item.badge + '</span>';
+    wrap.appendChild(num);
+
+    const q = document.createElement('div');
+    q.className = 'essay-q';
+    q.textContent = item.q;
+    wrap.appendChild(q);
+
+    const input = document.createElement('textarea');
+    input.className = 'essay-input' + (item.type === 'kode' ? ' code-input' : '');
+    input.id = 'essay-input-' + i;
+    input.placeholder = item.type === 'kode' ? 'Tulis kode HTML di sini...' : 'Tulis jawabanmu di sini...';
+    input.spellcheck = false;
+    wrap.appendChild(input);
+
+    const hint = document.createElement('div');
+    hint.className = 'essay-hint';
+    hint.id = 'essay-hint-' + i;
+    hint.textContent = '💡 ' + item.hint;
+    wrap.appendChild(hint);
+
+    const actions = document.createElement('div');
+    actions.className = 'essay-actions';
+
+    const btnHint = document.createElement('button');
+    btnHint.className = 'btn btn-ghost btn-sm';
+    btnHint.type = 'button';
+    btnHint.textContent = '💡 Hint';
+    btnHint.onclick = () => {
+      document.getElementById('essay-hint-' + i).classList.toggle('show');
+    };
+    actions.appendChild(btnHint);
+
+    const btnCheck = document.createElement('button');
+    btnCheck.className = 'btn btn-green btn-sm';
+    btnCheck.type = 'button';
+    btnCheck.textContent = '✓ Cek Jawaban';
+    btnCheck.onclick = () => checkEssay(i);
+    actions.appendChild(btnCheck);
+
+    wrap.appendChild(actions);
+
+    const fb = document.createElement('div');
+    fb.className = 'essay-fb';
+    fb.id = 'essay-fb-' + i;
+    wrap.appendChild(fb);
+
+    essayContainer.appendChild(wrap);
+  });
+
+  updateEssayScore();
+}
+
+function checkEssay(i){
+  const item = ESSAY[i];
+  const input = document.getElementById('essay-input-' + i);
+  const fb = document.getElementById('essay-fb-' + i);
+  const wrap = document.getElementById('essay-' + i);
+  const val = input.value;
+
+  if(!val.trim()){
+    fb.className = 'essay-fb tip show';
+    fb.innerHTML = '✏️ <span>Jawaban masih kosong. Tulis dulu jawabanmu ya!</span>';
+    return;
+  }
+
+  const ok = checkEssayAnswer(i, val);
+
+  if(ok){
+    fb.className = 'essay-fb ok show';
+    fb.innerHTML = '✅ <span><strong>Tepat!</strong> ' + item.exp + '</span>';
+    wrap.classList.remove('wrong');
+    wrap.classList.add('correct');
+    essayState[i] = { checked:true, correct:true };
+  } else {
+    fb.className = 'essay-fb no show';
+    fb.innerHTML = '❌ <span>Belum tepat. Baca lagi pertanyaannya, atau klik tombol <strong>Hint</strong> untuk bantuan.</span>';
+    wrap.classList.remove('correct');
+    wrap.classList.add('wrong');
+    essayState[i] = { checked:true, correct:false };
+  }
+
+  updateEssayScore();
+}
+
+function getEssayScore(){
+  return essayState.filter(s => s && s.correct).length;
+}
+
+function updateEssayScore(){
+  const score = getEssayScore();
+  essayScoreEl.textContent = score;
+  if(score === ESSAY.length){
+    essayAllDone.className = 'essay-fb ok show';
+    essayAllDone.innerHTML = '🎉 <span>Semua soal uraian dijawab dengan benar! Luar biasa!</span>';
+  } else {
+    essayAllDone.className = 'essay-fb';
+    essayAllDone.innerHTML = '';
+  }
+}
+
+function resetEssay(){
+  document.querySelectorAll('.essay-item').forEach(el => el.classList.remove('correct','wrong'));
+  document.querySelectorAll('.essay-input').forEach(el => el.value = '');
+  document.querySelectorAll('.essay-fb').forEach(el => {
+    el.className = 'essay-fb';
+    el.innerHTML = '';
+  });
+  document.querySelectorAll('.essay-hint').forEach(el => el.classList.remove('show'));
+  essayState = ESSAY.map(() => ({ checked:false, correct:false }));
+  updateEssayScore();
+}
+
+/* ============================================================
+   KUIS - 25 SOAL
+   ============================================================ */
+const QUIZ = [
+  { q:"Tag HTML untuk membuat heading/judul terbesar adalah...",
+    opts:["<p>","<h1>","<div>","<header>"], ans:1,
+    exp:"<h1> adalah heading terbesar, urut sampai <h6>." },
+  { q:"Bagian HTML yang berisi informasi meta, judul, dan link stylesheet adalah...",
+    opts:["<body>","<html>","<head>","<footer>"], ans:2,
+    exp:"<head> menyimpan info halaman, tidak tampil di browser." },
+  { q:"Tag untuk membuat paragraf teks adalah...",
+    opts:["<br>","<p>","<par>","<text>"], ans:1,
+    exp:"<p> adalah singkatan dari paragraph." },
+  { q:"Fungsi ekstensi 'Live Server' di VS Code adalah...",
+    opts:["Membuat file HTML otomatis","Menjalankan server database","Preview halaman web secara live di browser","Mengcompile JavaScript"], ans:2,
+    exp:"Live Server auto-refresh browser setiap file disimpan." },
+  { q:"Tag HTML untuk membuat teks menjadi tebal (bold) adalah...",
+    opts:["<i>","<u>","<b>","<strong>"], ans:2,
+    exp:"<b> membuat teks tebal. <strong> juga tebal tapi bermakna penting." },
+  { q:"Tag HTML untuk membuat teks bercetak miring adalah...",
+    opts:["<i>","<b>","<em>","<italic>"], ans:0,
+    exp:"<i> membuat teks italic/miring. <em> juga miring tapi bermakna penekanan." },
+  { q:"Tag HTML untuk menampilkan gambar adalah...",
+    opts:["<picture>","<image>","<img>","<src>"], ans:2,
+    exp:"<img> adalah tag untuk gambar, dengan atribut src." },
+  { q:"Atribut yang digunakan pada tag <a> untuk menentukan alamat link adalah...",
+    opts:["src","href","link","url"], ans:1,
+    exp:"href (hypertext reference) menentukan tujuan link." },
+  { q:"Tag HTML untuk membuat garis pemisah horizontal adalah...",
+    opts:["<line>","<hr>","<br>","<separator>"], ans:1,
+    exp:"<hr> = horizontal rule, membuat garis horizontal." },
+  { q:"Di VS Code, panel untuk melihat file dan folder proyek disebut...",
+    opts:["Terminal","Editor","Explorer","Activity Bar"], ans:2,
+    exp:"Explorer menampilkan struktur file & folder proyek." },
+  { q:"Shortcut untuk membuka Command Palette di VS Code adalah...",
+    opts:["Ctrl + P","Ctrl + Shift + P","Ctrl + N","Ctrl + `"], ans:1,
+    exp:"Ctrl+Shift+P membuka Command Palette." },
+  { q:"Tag <!DOCTYPE html> berfungsi untuk...",
+    opts:["Membuat komentar","Mendeklarasikan dokumen sebagai HTML5","Membuat judul halaman","Menghubungkan CSS"], ans:1,
+    exp:"<!DOCTYPE html> memberi tahu browser ini dokumen HTML5." },
+  { q:"Tag HTML yang menjadi elemen akar (root) seluruh halaman adalah...",
+    opts:["<body>","<head>","<html>","<root>"], ans:2,
+    exp:"<html> membungkus seluruh dokumen HTML." },
+  { q:"Urutan heading dari terbesar ke terkecil yang benar adalah...",
+    opts:["<h6> → <h1>","<h1> → <h6>","<h3> → <h1>","<h1> → <h3> → <h6>"], ans:1,
+    exp:"<h1> paling besar, <h6> paling kecil." },
+  { q:"Bagian HTML yang isinya tampil di browser adalah...",
+    opts:["<head>","<body>","<meta>","<title>"], ans:1,
+    exp:"<body> berisi konten yang tampil di browser." },
+  /* ===== 10 SOAL BARU ===== */
+  { q:"Tag HTML untuk membuat daftar dengan bullet (tidak berurut) adalah...",
+    opts:["<ol>","<ul>","<li>","<list>"], ans:1,
+    exp:"<ul> = unordered list, daftar dengan bullet point." },
+  { q:"Tag HTML untuk membuat daftar bernomor (berurut) adalah...",
+    opts:["<ul>","<ol>","<dl>","<nl>"], ans:1,
+    exp:"<ol> = ordered list, daftar dengan nomor urut." },
+  { q:"Tag yang digunakan untuk membuat item di dalam list adalah...",
+    opts:["<item>","<li>","<list>","<entry>"], ans:1,
+    exp:"<li> = list item, dipakai di dalam <ul> atau <ol>." },
+  { q:"Tag HTML untuk membuat tabel adalah...",
+    opts:["<tab>","<grid>","<table>","<tbl>"], ans:2,
+    exp:"<table> membuat tabel. Di dalamnya ada <tr>, <th>, dan <td>." },
+  { q:"Tag untuk membuat baris (row) pada tabel adalah...",
+    opts:["<td>","<th>","<tr>","<row>"], ans:2,
+    exp:"<tr> = table row, membuat satu baris tabel." },
+  { q:"Tag untuk membuat sel header (judul kolom) pada tabel adalah...",
+    opts:["<td>","<th>","<thead>","<header>"], ans:1,
+    exp:"<th> = table header, untuk judul kolom tabel." },
+  { q:"Atribut pada tag <a> yang berfungsi membuka link di tab baru adalah...",
+    opts:["href=\"_new\"","target=\"_blank\"","new=\"true\"","open=\"tab\""], ans:1,
+    exp:"target=\"_blank\" membuat link terbuka di tab baru." },
+  { q:"Perbedaan utama antara atribut id dan class pada HTML adalah...",
+    opts:["id harus unik, class boleh berulang","class harus unik, id boleh berulang","Keduanya sama saja","id hanya untuk JavaScript"], ans:0,
+    exp:"id bersifat unik (satu per halaman), class bisa dipakai banyak elemen." },
+  { q:"Tag semantik HTML untuk bagian kepala halaman (berisi judul/nav) adalah...",
+    opts:["<top>","<head>","<header>","<start>"], ans:2,
+    exp:"<header> adalah tag semantik untuk bagian kepala halaman atau section." },
+  { q:"Tag HTML untuk membuat form input dari pengguna adalah...",
+    opts:["<input>","<form>","<field>","<entry>"], ans:1,
+    exp:"<form> membungkus elemen-elemen input. Di dalamnya ada <input>, <label>, <button>." }
+];
+
+const quizContainer = document.getElementById('quizContainer');
+const quizProgressNum = document.getElementById('quizProgressNum');
+const quizScoreNum = document.getElementById('quizScoreNum');
+const quizBarFill = document.getElementById('quizBarFill');
+const quizResult = document.getElementById('quizResult');
+
+let quizAnswered = new Set();
+let quizAnsweredAny = new Set();
+let quizScore = 0;
+
+function renderQuiz(){
+  quizContainer.innerHTML = '';
+  QUIZ.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'q-card-' + i;
+
+    const num = document.createElement('div');
+    num.className = 'q-num';
+    num.textContent = 'SOAL ' + (i+1) + ' / ' + QUIZ.length;
+    card.appendChild(num);
+
+    const qText = document.createElement('div');
+    qText.className = 'q-text';
+    qText.textContent = item.q;
+    card.appendChild(qText);
+
+    const opts = document.createElement('div');
+    opts.className = 'q-opts';
+    item.opts.forEach((opt, j) => {
+      const btn = document.createElement('button');
+      btn.className = 'q-opt';
+      btn.dataset.q = i;
+      btn.dataset.o = j;
+      btn.type = 'button';
+      const letters = ['A','B','C','D'];
+      btn.innerHTML = '<span class="mark">'+letters[j]+'</span><span>'+escapeHtml(opt)+'</span>';
+      btn.addEventListener('click', () => answerQuiz(i, j, card, opts));
+      opts.appendChild(btn);
+    });
+    card.appendChild(opts);
+
+    const fb = document.createElement('div');
+    fb.className = 'q-feedback';
+    fb.id = 'q-fb-' + i;
+    card.appendChild(fb);
+
+    quizContainer.appendChild(card);
+  });
+  updateQuizHeader();
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function answerQuiz(qIdx, optIdx, card, optsEl){
+  if(quizAnswered.has(qIdx)) return;
+  const item = QUIZ[qIdx];
+  const buttons = optsEl.querySelectorAll('.q-opt');
+  const fb = document.getElementById('q-fb-' + qIdx);
+
+  if(!quizAnsweredAny.has(qIdx)) quizAnsweredAny.add(qIdx);
+
+  buttons.forEach(b => b.classList.remove('selected'));
+  const chosen = buttons[optIdx];
+  chosen.classList.add('selected');
+
+  if(optIdx === item.ans){
+    chosen.classList.remove('selected');
+    chosen.classList.add('correct');
+    quizAnswered.add(qIdx);
+    quizScore++;
+    fb.className = 'q-feedback ok show';
+    fb.innerHTML = '✅ <span><strong>Benar!</strong> ' + item.exp + '</span>';
+    buttons.forEach(b => b.disabled = true);
+    buttons[item.ans].classList.add('correct');
+  } else {
+    chosen.classList.remove('selected');
+    chosen.classList.add('wrong');
+    chosen.disabled = true;
+    fb.className = 'q-feedback no show';
+    fb.innerHTML = '❌ <span>Belum tepat. Coba pilihan lain!</span>';
+    setTimeout(() => {
+      if(fb.classList.contains('no')) fb.classList.remove('show');
+    }, 2200);
+  }
+
+  updateQuizHeader();
+  checkQuizComplete();
+}
+
+function updateQuizHeader(){
+  quizProgressNum.textContent = quizAnsweredAny.size;
+  quizScoreNum.textContent = quizScore;
+  quizBarFill.style.width = (quizAnsweredAny.size / QUIZ.length * 100) + '%';
+}
+
+function checkQuizComplete(){
+  if(quizAnswered.size === QUIZ.length ||
+     (quizAnsweredAny.size === QUIZ.length && quizAnswered.size < QUIZ.length)){
+    showQuizResult();
+  }
+}
+
+function showQuizResult(){
+  quizResult.classList.remove('hidden');
+  const pct = Math.round(quizScore / QUIZ.length * 100);
+  document.getElementById('resultVal').textContent = pct + '%';
+  document.getElementById('resultScore').textContent = 'Skor: ' + quizScore + ' / ' + QUIZ.length;
+  const circle = document.getElementById('resultCircle');
+  circle.style.background = `conic-gradient(${pct===100?'var(--green)':'var(--cyan)'} ${pct*3.6}deg, var(--bg-surface) ${pct*3.6}deg)`;
+  document.getElementById('resultVal').style.color = pct === 100 ? 'var(--green)' : 'var(--cyan)';
+
+  let msg = '';
+  if(quizScore === 25) msg = 'Sempurna! Kamu benar-benar menguasai HTML & VS Code! 🏆';
+  else if(quizScore >= 21) msg = 'Hebat! Pemahamanmu sudah sangat baik. 🌟';
+  else if(quizScore >= 15) msg = 'Bagus! Sedikit lagi menuju sempurna. 💪';
+  else if(quizScore >= 8) msg = 'Lumayan! Baca ulang materi dan coba lagi. 📚';
+  else msg = 'Jangan menyerah! Pelajari kembali materi lalu ulangi kuis. 🔥';
+  document.getElementById('resultMsg').textContent = msg;
+
+  setTimeout(() => {
+    quizResult.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 300);
+}
+
+function resetQuiz(){
+  quizAnswered = new Set();
+  quizAnsweredAny = new Set();
+  quizScore = 0;
+  quizResult.classList.add('hidden');
+  renderQuiz();
+  quizContainer.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ============================================================
+   INISIALISASI
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderQuiz();
+  renderEssay();
+  updateLKPD();
+});
+
+/* ============================================================
+   EKSPOR GLOBAL
+   ============================================================ */
+window.goTo = goTo;
+window.toggleAcc = toggleAcc;
+window.runCode = runCode;
+window.clearPreview = clearPreview;
+window.resetEditor = resetEditor;
+window.resetLKPD = resetLKPD;
+window.saveLKPD = saveLKPD;
+window.resetQuiz = resetQuiz;
+window.resetEssay = resetEssay;
+</script>
+</body>
+</html>
